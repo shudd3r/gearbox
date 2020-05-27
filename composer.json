@@ -1,0 +1,31 @@
+{
+    "name": "shudd3r/gearbox",
+    "description": "Design Code-Kata from https://devupgrade.online",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Shudd3r",
+            "email": "q3.shudder@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Shudd3r\\Gearbox\\": "src/"
+        },
+        "classmap": [
+            "api/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shudd3r\\Gearbox\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.4",
+        "phpunit/phpunit": "^9.0",
+        "php-coveralls/php-coveralls": "^2.2"
+    }
+}
