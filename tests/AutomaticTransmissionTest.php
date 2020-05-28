@@ -4,6 +4,7 @@ namespace Shudd3r\Gearbox\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\AutomaticTransmission;
+use Shudd3r\Gearbox\Tests\Integration\Doubles;
 
 
 class AutomaticTransmissionTest extends TestCase
