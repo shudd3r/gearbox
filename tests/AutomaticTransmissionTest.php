@@ -4,23 +4,22 @@ namespace Shudd3r\Gearbox\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\AutomaticTransmission;
-use ExternalSystems;
 use Gearbox;
 
 
 class AutomaticTransmissionTest extends TestCase
 {
+    private const MAX_GEAR = 6;
+
     public function testInstantiation()
     {
-        $driver = new AutomaticTransmission(new Gearbox(), new ExternalSystems());
-        $this->assertInstanceOf(AutomaticTransmission::class, $driver);
+        $this->assertInstanceOf(AutomaticTransmission::class, $this->driver(new Gearbox()));
     }
 
     public function testCurrentRPMIsWithinRange_AdjustGearRatio_KeepsCurrentGearUnchanged()
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(1500);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
+        $driver = $this->driver($gearbox = new Gearbox(), 1500);
+        $gearbox->setCurrentGear($initialGear = 3);
 
         $driver->adjustGearRatio();
 
@@ -29,10 +28,8 @@ class AutomaticTransmissionTest extends TestCase
 
     public function testCurrentRPMIsTooAboveMaximum_AdjustGearRatio_CurrentGearIsIncreased()
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(2600);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
+        $driver = $this->driver($gearbox = new Gearbox(), 2600);
+        $gearbox->setCurrentGear($initialGear = 3);
 
         $driver->adjustGearRatio();
 
@@ -41,10 +38,8 @@ class AutomaticTransmissionTest extends TestCase
 
     public function testCurrentGearIsNotIncreasedBeyondMaxDrive()
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(2100);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 6]);
+        $driver = $this->driver($gearbox = new Gearbox(), 2600);
+        $gearbox->setCurrentGear($initialGear = self::MAX_GEAR);
 
         $driver->adjustGearRatio();
 
@@ -53,10 +48,8 @@ class AutomaticTransmissionTest extends TestCase
 
     public function testCurrentRPMIsTooBelowMinimum_AdjustGearRatio_CurrentGearIsDecreased()
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(900);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
+        $driver = $this->driver($gearbox = new Gearbox(), 900);
+        $gearbox->setCurrentGear($initialGear = 3);
 
         $driver->adjustGearRatio();
 
@@ -65,13 +58,19 @@ class AutomaticTransmissionTest extends TestCase
 
     public function testCurrentGearIsNotDecreasedBelowFirstGear()
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(900);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 1]);
+        $driver = $this->driver($gearbox = new Gearbox(), 900);
+        $gearbox->setCurrentGear($initialGear = 1);
 
         $driver->adjustGearRatio();
 
         $this->assertSame($initialGear, $gearbox->getCurrentGear());
+    }
+
+    private function driver(Gearbox $gearbox, float $rpm = 1000.0): AutomaticTransmission
+    {
+        $gearbox->setMaxDrive(self::MAX_GEAR);
+        $gearbox->setGearBoxCurrentParams([1, 1]);
+
+        return new AutomaticTransmission($gearbox, new Doubles\FakeEngineSensor($rpm));
     }
 }
