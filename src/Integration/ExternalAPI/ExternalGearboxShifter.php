@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Shudd3r\Gearbox\Shifter;
+namespace Shudd3r\Gearbox\Integration\ExternalAPI;
 
 use Shudd3r\Gearbox\Shifter;
 use Gearbox;

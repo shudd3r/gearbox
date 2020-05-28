@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Shudd3r\Gearbox\Tests\Sensors\EngineSensor;
+namespace Shudd3r\Gearbox\Tests\Integration\ExternalAPI;
 
 use PHPUnit\Framework\TestCase;
-use Shudd3r\Gearbox\Sensors\EngineSensor\ExternalEngineSensor;
+use Shudd3r\Gearbox\Integration\ExternalAPI\ExternalEngineSensor;
 use Shudd3r\Gearbox\Sensors\EngineSensor;
 use ExternalSystems;
 

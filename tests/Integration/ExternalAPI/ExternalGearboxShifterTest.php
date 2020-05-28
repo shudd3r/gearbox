@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Shudd3r\Gearbox\Tests\Shifter;
+namespace Shudd3r\Gearbox\Tests\Integration\ExternalAPI;
 
 use PHPUnit\Framework\TestCase;
+use Shudd3r\Gearbox\Integration\ExternalAPI\ExternalGearboxShifter;
 use Shudd3r\Gearbox\Shifter;
 use Gearbox;
 
@@ -60,7 +61,7 @@ class ExternalGearboxShifterTest extends TestCase
     {
         $gearbox = new Gearbox();
         $gearbox->setMaxDrive(self::MAX_GEAR);
-        $shifter = new Shifter\ExternalGearboxShifter($gearbox);
+        $shifter = new ExternalGearboxShifter($gearbox);
 
         foreach (range(2, 4) as $state) {
             $gearbox->setGearBoxCurrentParams([$state, $initialGear = 3]);
@@ -78,6 +79,6 @@ class ExternalGearboxShifterTest extends TestCase
         $gearbox->setMaxDrive(self::MAX_GEAR);
         $gearbox->setGearBoxCurrentParams([1, $gear]);
 
-        return new Shifter\ExternalGearboxShifter($gearbox);
+        return new ExternalGearboxShifter($gearbox);
     }
 }
