@@ -1,6 +1,6 @@
 <?php
 
-namespace Shudd3r\Gearbox;
+namespace Shudd3r\Gearbox\Integration;
 
 
 interface Shifter

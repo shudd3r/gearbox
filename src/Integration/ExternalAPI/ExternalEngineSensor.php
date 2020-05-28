@@ -2,7 +2,7 @@
 
 namespace Shudd3r\Gearbox\Integration\ExternalAPI;
 
-use Shudd3r\Gearbox\Sensors\EngineSensor;
+use Shudd3r\Gearbox\Integration\EngineSensor;
 use ExternalSystems;
 
 

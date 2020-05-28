@@ -4,7 +4,7 @@ namespace Shudd3r\Gearbox\Tests\Integration\ExternalAPI;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\Integration\ExternalAPI\ExternalEngineSensor;
-use Shudd3r\Gearbox\Sensors\EngineSensor;
+use Shudd3r\Gearbox\Integration\EngineSensor;
 use ExternalSystems;
 
 

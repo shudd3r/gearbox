@@ -2,7 +2,7 @@
 
 namespace Shudd3r\Gearbox\Tests\Doubles;
 
-use Shudd3r\Gearbox\Shifter;
+use Shudd3r\Gearbox\Integration\Shifter;
 
 
 class MockedShifter implements Shifter

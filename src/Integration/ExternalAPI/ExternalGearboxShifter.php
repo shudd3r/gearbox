@@ -2,7 +2,7 @@
 
 namespace Shudd3r\Gearbox\Integration\ExternalAPI;
 
-use Shudd3r\Gearbox\Shifter;
+use Shudd3r\Gearbox\Integration\Shifter;
 use Gearbox;
 
 

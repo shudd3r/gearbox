@@ -2,7 +2,7 @@
 
 namespace Shudd3r\Gearbox\Tests\Doubles;
 
-use Shudd3r\Gearbox\Sensors\EngineSensor;
+use Shudd3r\Gearbox\Integration\EngineSensor;
 
 
 class FakeEngineSensor implements EngineSensor

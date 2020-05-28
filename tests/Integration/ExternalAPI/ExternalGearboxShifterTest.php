@@ -4,7 +4,7 @@ namespace Shudd3r\Gearbox\Tests\Integration\ExternalAPI;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\Integration\ExternalAPI\ExternalGearboxShifter;
-use Shudd3r\Gearbox\Shifter;
+use Shudd3r\Gearbox\Integration\Shifter;
 use Gearbox;
 
 

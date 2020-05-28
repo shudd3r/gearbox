@@ -2,7 +2,8 @@
 
 namespace Shudd3r\Gearbox;
 
-use Shudd3r\Gearbox\Sensors\EngineSensor;
+use Shudd3r\Gearbox\Integration\Shifter;
+use Shudd3r\Gearbox\Integration\EngineSensor;
 
 
 class AutomaticTransmission
