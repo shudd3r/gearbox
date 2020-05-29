@@ -9,28 +9,24 @@ use Shudd3r\Gearbox\Parameters\RPMRange;
 
 class AutomaticTransmission
 {
-    private const CHARACTERISTICS = [2000, 1000, 1000, 0.5, 2500, 4500, 1500, 0.5, 5000, 0.7, 5000, 5000, 1500, 2000, 3000, 6500, 14];
-
     private Shifter      $shifter;
     private EngineSensor $engine;
+    private RPMRange     $range;
 
-    private RPMRange $RPMRange;
-
-    public function __construct(Shifter $shifter, EngineSensor $engine)
+    public function __construct(Shifter $shifter, EngineSensor $engine, RPMRange $range)
     {
         $this->shifter = $shifter;
         $this->engine  = $engine;
-
-        $this->RPMRange = RPMRange::fromValues(self::CHARACTERISTICS[2], self::CHARACTERISTICS[4]);
+        $this->range   = $range;
     }
 
     public function adjustGearRatio(): void
     {
         $currentRPM = $this->engine->rpm();
 
-        if ($currentRPM->isHigherThan($this->RPMRange->max())) {
+        if ($currentRPM->isHigherThan($this->range->max())) {
             $this->shifter->gearUp();
-        } elseif ($currentRPM->isLowerThan($this->RPMRange->min())) {
+        } elseif ($currentRPM->isLowerThan($this->range->min())) {
             $this->shifter->gearDown();
         }
     }
