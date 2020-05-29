@@ -5,6 +5,7 @@ namespace Shudd3r\Gearbox\Tests\Integration\ExternalAPI;
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\Integration\ExternalAPI\ExternalEngineSensor;
 use Shudd3r\Gearbox\Integration\EngineSensor;
+use Shudd3r\Gearbox\Parameters\RPM;
 use ExternalSystems;
 
 
@@ -21,6 +22,6 @@ class ExternalEngineSensorTest extends TestCase
         $externalSystems->setCurrentRpm($currentRpm = 1000.0);
         $engine = new ExternalEngineSensor($externalSystems);
 
-        $this->assertSame($currentRpm, $engine->rpm());
+        $this->assertEquals(new RPM((int) $currentRpm), $engine->rpm());
     }
 }

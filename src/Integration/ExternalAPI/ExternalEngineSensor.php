@@ -3,6 +3,7 @@
 namespace Shudd3r\Gearbox\Integration\ExternalAPI;
 
 use Shudd3r\Gearbox\Integration\EngineSensor;
+use Shudd3r\Gearbox\Parameters\RPM;
 use ExternalSystems;
 
 
@@ -15,8 +16,8 @@ class ExternalEngineSensor implements EngineSensor
         $this->externalSystems = $externalSystems;
     }
 
-    public function rpm(): float
+    public function rpm(): RPM
     {
-        return $this->externalSystems->getCurrentRpm();
+        return new RPM((int) $this->externalSystems->getCurrentRpm());
     }
 }

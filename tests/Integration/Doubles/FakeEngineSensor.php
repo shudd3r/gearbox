@@ -3,18 +3,19 @@
 namespace Shudd3r\Gearbox\Tests\Integration\Doubles;
 
 use Shudd3r\Gearbox\Integration\EngineSensor;
+use Shudd3r\Gearbox\Parameters\RPM;
 
 
 class FakeEngineSensor implements EngineSensor
 {
-    private float $rpm;
+    private RPM $rpm;
 
-    public function __construct(float $rpm = 1000.0)
+    public function __construct(int $rpm = 1000)
     {
-        $this->rpm = $rpm;
+        $this->rpm = new RPM($rpm);
     }
 
-    public function rpm(): float
+    public function rpm(): RPM
     {
         return $this->rpm;
     }

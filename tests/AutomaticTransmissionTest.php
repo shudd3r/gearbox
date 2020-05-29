@@ -21,7 +21,7 @@ class AutomaticTransmissionTest extends TestCase
      * @param float $rpm
      * @param int   $adjustedGear
      */
-    public function testGearRatioIsAdjustedToCurrentRPM(int $initialGear, float $rpm, int $adjustedGear)
+    public function testGearRatioIsAdjustedToCurrentRPM(int $initialGear, int $rpm, int $adjustedGear)
     {
         $shifter = new Doubles\MockedShifter($initialGear);
         $driver  = $this->driver($shifter, $rpm);
@@ -40,7 +40,7 @@ class AutomaticTransmissionTest extends TestCase
         ];
     }
 
-    private function driver(Doubles\MockedShifter $shifter, float $rpm = 1000.0): AutomaticTransmission
+    private function driver(Doubles\MockedShifter $shifter, int $rpm = 1000): AutomaticTransmission
     {
         return new AutomaticTransmission($shifter, new Doubles\FakeEngineSensor($rpm));
     }
