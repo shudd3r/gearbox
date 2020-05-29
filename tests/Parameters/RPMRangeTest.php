@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Shudd3r\Gearbox\Tests\Parameters;
 
