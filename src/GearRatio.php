@@ -26,4 +26,9 @@ class GearRatio
             $this->shifter->gearDown();
         }
     }
+
+    public function setRPMRange(RPMRange $range): void
+    {
+        $this->range = $range;
+    }
 }
