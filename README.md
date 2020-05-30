@@ -7,4 +7,4 @@ Design Code-Kata from [devupgrade.online](https://devupgrade.online)
 
 Features:
 - [x] Automatic transmission adjusting gear ratio to engine RPM
-- [ ] Gearbox modes: ECO, COMFORT & SPORT
+- [x] Gearbox modes: ECO, COMFORT & SPORT
