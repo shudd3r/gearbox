@@ -16,13 +16,13 @@ class ExternalGearboxSystem extends GearboxSystem
 
     private Gearbox         $gearbox;
     private ExternalSystems $externalSystems;
-    private array           $characteristics;
 
-    public function __construct(Gearbox $gearbox, ExternalSystems $externalSystems, array $characteristics = null)
+    public function __construct(Gearbox $gearbox, ExternalSystems $externalSystems, array $ranges = null)
     {
         $this->gearbox         = $gearbox;
         $this->externalSystems = $externalSystems;
-        $this->characteristics = $characteristics ?? self::CHARACTERISTICS;
+
+        parent::__construct($ranges ?? $this->defaultRanges());
     }
 
     protected function shifter(): Shifter
@@ -35,8 +35,12 @@ class ExternalGearboxSystem extends GearboxSystem
         return new ExternalEngineSensor($this->externalSystems);
     }
 
-    protected function range(): RPMRange
+    private function defaultRanges(): array
     {
-        return RPMRange::fromValues($this->characteristics[2], $this->characteristics[4]);
+        return [
+            self::COMFORT_MODE => RPMRange::fromValues(self::CHARACTERISTICS[2], self::CHARACTERISTICS[4]),
+            self::ECO_MODE     => RPMRange::fromValues(self::CHARACTERISTICS[1], self::CHARACTERISTICS[0]),
+            self::SPORT_MODE   => RPMRange::fromValues(self::CHARACTERISTICS[6], self::CHARACTERISTICS[8])
+        ];
     }
 }
