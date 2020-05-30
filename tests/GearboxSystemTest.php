@@ -5,12 +5,14 @@ namespace Shudd3r\Gearbox\Tests;
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\GearboxSystem;
 use Shudd3r\Gearbox\AutomaticTransmission;
+use Shudd3r\Gearbox\Parameters\Characteristics;
+use Shudd3r\Gearbox\Parameters\RPMRange;
 use Shudd3r\Gearbox\Tests\Integration\Doubles;
 
 
 class GearboxSystemTest extends TestCase
 {
-    private Doubles\FakeGearboxSystem $system;
+    private const RANGES = [[1000, 2000], [1000, 2500], [1500, 5000]];
 
     public function testInstantiation()
     {
@@ -24,18 +26,25 @@ class GearboxSystemTest extends TestCase
 
     public function testModeChange()
     {
-        $this->system()->setEcoMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges->eco());
+        $system = $this->system();
+        $this->assertSame($system->defaultRanges->comfort(), $system->mockedRatio->capturedRange);
 
-        $this->system->setSportMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges->sport());
+        $system->setEcoMode();
+        $this->assertSame($system->defaultRanges->eco(), $system->mockedRatio->capturedRange);
 
-        $this->system->setComfortMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges->comfort());
+        $system->setComfortMode();
+        $this->assertSame($system->defaultRanges->comfort(), $system->mockedRatio->capturedRange);
+
+        $system->setSportMode();
+        $this->assertSame($system->defaultRanges->sport(), $system->mockedRatio->capturedRange);
     }
 
-    protected function system(): GearboxSystem
+    protected function system(): Doubles\FakeGearboxSystem
     {
-        return $this->system = new Doubles\FakeGearboxSystem();
+        return new Doubles\FakeGearboxSystem(new Characteristics(
+            RPMRange::fromValues(...self::RANGES[0]),
+            RPMRange::fromValues(...self::RANGES[1]),
+            RPMRange::fromValues(...self::RANGES[2])
+        ));
     }
 }
