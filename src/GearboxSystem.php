@@ -2,6 +2,7 @@
 
 namespace Shudd3r\Gearbox;
 
+use Shudd3r\Gearbox\Parameters\Characteristics;
 use Shudd3r\Gearbox\Integration\EngineSensor;
 use Shudd3r\Gearbox\Integration\Shifter;
 use Shudd3r\Gearbox\Parameters\RPMRange;
@@ -9,17 +10,13 @@ use Shudd3r\Gearbox\Parameters\RPMRange;
 
 abstract class GearboxSystem
 {
-    protected const ECO_MODE     = 0;
-    protected const COMFORT_MODE = 1;
-    protected const SPORT_MODE   = 2;
+    private Characteristics $ranges;
+    private GearRatio       $gearRatio;
 
-    private array     $ranges;
-    private GearRatio $gearRatio;
-
-    public function __construct(array $ranges)
+    public function __construct(Characteristics $ranges)
     {
         $this->ranges    = $ranges;
-        $this->gearRatio = new GearRatio($this->shifter(), $this->range(self::COMFORT_MODE));
+        $this->gearRatio = new GearRatio($this->shifter(), $this->ranges->comfort());
     }
 
     public function transmission(): AutomaticTransmission
@@ -29,29 +26,24 @@ abstract class GearboxSystem
 
     public function setEcoMode(): void
     {
-        $this->changeRPMRange(self::ECO_MODE);
+        $this->changeRPMRange($this->ranges->eco());
     }
 
     public function setComfortMode(): void
     {
-        $this->changeRPMRange(self::COMFORT_MODE);
+        $this->changeRPMRange($this->ranges->comfort());
     }
 
     public function setSportMode(): void
     {
-        $this->changeRPMRange(self::SPORT_MODE);
+        $this->changeRPMRange($this->ranges->sport());
     }
 
     abstract protected function shifter(): Shifter;
     abstract protected function engineSensor(): EngineSensor;
 
-    protected function range(int $mode): RPMRange
+    protected function changeRPMRange(RPMRange $range): void
     {
-        return $this->ranges[$mode] ?? reset($this->ranges);
-    }
-
-    private function changeRPMRange(int $mode): void
-    {
-        $this->gearRatio->setRPMRange($this->range($mode));
+        $this->gearRatio->setRPMRange($range);
     }
 }

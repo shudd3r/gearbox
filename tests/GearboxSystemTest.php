@@ -24,17 +24,14 @@ class GearboxSystemTest extends TestCase
 
     public function testModeChange()
     {
-        $this->system();
-        $this->assertSame($this->system->range, $this->system->defaultRanges[1]);
-
-        $this->system->setEcoMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges[0]);
+        $this->system()->setEcoMode();
+        $this->assertSame($this->system->range, $this->system->defaultRanges->eco());
 
         $this->system->setSportMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges[2]);
+        $this->assertSame($this->system->range, $this->system->defaultRanges->sport());
 
         $this->system->setComfortMode();
-        $this->assertSame($this->system->range, $this->system->defaultRanges[1]);
+        $this->assertSame($this->system->range, $this->system->defaultRanges->comfort());
     }
 
     protected function system(): GearboxSystem

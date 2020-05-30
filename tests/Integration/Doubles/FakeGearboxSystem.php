@@ -5,21 +5,22 @@ namespace Shudd3r\Gearbox\Tests\Integration\Doubles;
 use Shudd3r\Gearbox\GearboxSystem;
 use Shudd3r\Gearbox\Integration\EngineSensor;
 use Shudd3r\Gearbox\Integration\Shifter;
+use Shudd3r\Gearbox\Parameters\Characteristics;
 use Shudd3r\Gearbox\Parameters\RPMRange;
 
 
 class FakeGearboxSystem extends GearboxSystem
 {
-    public array    $defaultRanges;
-    public RPMRange $range;
+    public Characteristics $defaultRanges;
+    public RPMRange        $range;
 
     public function __construct()
     {
-        $this->defaultRanges = [
-            self::ECO_MODE     => RPMRange::fromValues(1000, 2000),
-            self::COMFORT_MODE => RPMRange::fromValues(1000, 2500),
-            self::SPORT_MODE   => RPMRange::fromValues(1500, 5000),
-        ];
+        $this->defaultRanges = new Characteristics(
+            RPMRange::fromValues(1000, 2000),
+            RPMRange::fromValues(1000, 2500),
+            RPMRange::fromValues(1500, 5000)
+        );
 
         parent::__construct($this->defaultRanges);
     }
@@ -34,8 +35,8 @@ class FakeGearboxSystem extends GearboxSystem
         return new FakeEngineSensor();
     }
 
-    protected function range(int $mode): RPMRange
+    protected function changeRPMRange(RPMRange $range): void
     {
-        return $this->range = parent::range($mode);
+        parent::changeRPMRange($this->range = $range);
     }
 }
