@@ -2,19 +2,40 @@
 
 namespace Shudd3r\Gearbox;
 
+use Shudd3r\Gearbox\Parameters\Characteristics;
 use Shudd3r\Gearbox\Integration\EngineSensor;
-use Shudd3r\Gearbox\Integration\Shifter;
-use Shudd3r\Gearbox\Parameters\RPMRange;
 
 
 abstract class GearboxSystem
 {
-    public function transmission(): AutomaticTransmission
+    private Characteristics $ranges;
+    private GearRatio       $gearRatio;
+
+    public function __construct(Characteristics $ranges, GearRatio $gearRatio)
     {
-        return new AutomaticTransmission(new GearRatio($this->shifter(), $this->range()), $this->engineSensor());
+        $this->ranges    = $ranges;
+        $this->gearRatio = $gearRatio;
     }
 
-    abstract protected function shifter(): Shifter;
+    public function transmission(): AutomaticTransmission
+    {
+        return new AutomaticTransmission($this->gearRatio, $this->engineSensor());
+    }
+
+    public function setEcoMode(): void
+    {
+        $this->gearRatio->setRPMRange($this->ranges->eco());
+    }
+
+    public function setComfortMode(): void
+    {
+        $this->gearRatio->setRPMRange($this->ranges->comfort());
+    }
+
+    public function setSportMode(): void
+    {
+        $this->gearRatio->setRPMRange($this->ranges->sport());
+    }
+
     abstract protected function engineSensor(): EngineSensor;
-    abstract protected function range(): RPMRange;
 }

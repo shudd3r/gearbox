@@ -4,15 +4,21 @@ namespace Shudd3r\Gearbox\Tests\Integration\Doubles;
 
 use Shudd3r\Gearbox\GearboxSystem;
 use Shudd3r\Gearbox\Integration\EngineSensor;
-use Shudd3r\Gearbox\Integration\Shifter;
-use Shudd3r\Gearbox\Parameters\RPMRange;
+use Shudd3r\Gearbox\Parameters\Characteristics;
+use Shudd3r\Gearbox\Tests\Doubles\MockedGearRatio;
 
 
 class FakeGearboxSystem extends GearboxSystem
 {
-    protected function shifter(): Shifter
+    public Characteristics $defaultRanges;
+    public MockedGearRatio $mockedRatio;
+
+    public function __construct(Characteristics $ranges)
     {
-        return new MockedShifter(1);
+        $this->defaultRanges = $ranges;
+        $this->mockedRatio   = $this->mockedRatio();
+
+        parent::__construct($this->defaultRanges, $this->mockedRatio);
     }
 
     protected function engineSensor(): EngineSensor
@@ -20,8 +26,8 @@ class FakeGearboxSystem extends GearboxSystem
         return new FakeEngineSensor();
     }
 
-    protected function range(): RPMRange
+    private function mockedRatio(): MockedGearRatio
     {
-        return RPMRange::fromValues(1000, 2500);
+        return new MockedGearRatio(new MockedShifter(1), $this->defaultRanges->comfort());
     }
 }
