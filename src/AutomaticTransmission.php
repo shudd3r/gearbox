@@ -2,32 +2,22 @@
 
 namespace Shudd3r\Gearbox;
 
-use Shudd3r\Gearbox\Integration\Shifter;
 use Shudd3r\Gearbox\Integration\EngineSensor;
-use Shudd3r\Gearbox\Parameters\RPMRange;
 
 
 class AutomaticTransmission
 {
-    private Shifter      $shifter;
+    private GearRatio    $gear;
     private EngineSensor $engine;
-    private RPMRange     $range;
 
-    public function __construct(Shifter $shifter, EngineSensor $engine, RPMRange $range)
+    public function __construct(GearRatio $gear, EngineSensor $engine)
     {
-        $this->shifter = $shifter;
-        $this->engine  = $engine;
-        $this->range   = $range;
+        $this->gear   = $gear;
+        $this->engine = $engine;
     }
 
     public function adjustGearRatio(): void
     {
-        $currentRPM = $this->engine->rpm();
-
-        if ($currentRPM->isHigherThan($this->range->max())) {
-            $this->shifter->gearUp();
-        } elseif ($currentRPM->isLowerThan($this->range->min())) {
-            $this->shifter->gearDown();
-        }
+        $this->gear->adjust($this->engine->rpm());
     }
 }

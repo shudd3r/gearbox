@@ -4,6 +4,7 @@ namespace Shudd3r\Gearbox\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\AutomaticTransmission;
+use Shudd3r\Gearbox\GearRatio;
 use Shudd3r\Gearbox\Parameters\RPMRange;
 use Shudd3r\Gearbox\Tests\Integration\Doubles;
 
@@ -49,6 +50,6 @@ class AutomaticTransmissionTest extends TestCase
         $range  = RPMRange::fromValues(self::MIN_RPM, self::MAX_RPM);
         $sensor = new Doubles\FakeEngineSensor($rpm);
 
-        return new AutomaticTransmission($shifter, $sensor, $range);
+        return new AutomaticTransmission(new GearRatio($shifter, $range), $sensor);
     }
 }

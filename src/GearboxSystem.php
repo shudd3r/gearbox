@@ -11,7 +11,7 @@ abstract class GearboxSystem
 {
     public function transmission(): AutomaticTransmission
     {
-        return new AutomaticTransmission($this->shifter(), $this->engineSensor(), $this->range());
+        return new AutomaticTransmission(new GearRatio($this->shifter(), $this->range()), $this->engineSensor());
     }
 
     abstract protected function shifter(): Shifter;
