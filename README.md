@@ -4,3 +4,6 @@
 ### Gearbox model implementation
 
 Design Code-Kata from [devupgrade.online](https://devupgrade.online)
+
+Implemented features:
+* Automatic transmission adjusting gear ratio to engine RPM
