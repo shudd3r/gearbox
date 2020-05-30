@@ -4,9 +4,8 @@ namespace Shudd3r\Gearbox\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\GearboxSystem;
+use Shudd3r\Gearbox\Tests\Integration\Doubles;
 use Shudd3r\Gearbox\AutomaticTransmission;
-use ExternalSystems;
-use Gearbox;
 
 
 class GearboxSystemTest extends TestCase
@@ -21,8 +20,8 @@ class GearboxSystemTest extends TestCase
         $this->assertInstanceOf(AutomaticTransmission::class, $this->system()->transmission());
     }
 
-    private function system()
+    protected function system(): GearboxSystem
     {
-        return new GearboxSystem(new Gearbox(), new ExternalSystems());
+        return new Doubles\FakeGearboxSystem();
     }
 }
