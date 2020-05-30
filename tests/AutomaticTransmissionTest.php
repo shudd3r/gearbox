@@ -4,74 +4,52 @@ namespace Shudd3r\Gearbox\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Shudd3r\Gearbox\AutomaticTransmission;
-use ExternalSystems;
-use Gearbox;
+use Shudd3r\Gearbox\GearRatio;
+use Shudd3r\Gearbox\Parameters\RPMRange;
+use Shudd3r\Gearbox\Tests\Integration\Doubles;
 
 
 class AutomaticTransmissionTest extends TestCase
 {
+    private const MIN_RPM = 1000;
+    private const MAX_RPM = 2500;
+
     public function testInstantiation()
     {
-        $driver = new AutomaticTransmission(new Gearbox(), new ExternalSystems());
-        $this->assertInstanceOf(AutomaticTransmission::class, $driver);
+        $this->assertInstanceOf(AutomaticTransmission::class, $this->driver(new Doubles\MockedShifter(1)));
     }
 
-    public function testCurrentRPMIsWithinRange_AdjustGearRatio_KeepsCurrentGearUnchanged()
+    /**
+     * @dataProvider gearRegulation
+     *
+     * @param int   $initialGear
+     * @param float $rpm
+     * @param int   $adjustedGear
+     */
+    public function testGearRatioIsAdjustedToCurrentRPM(int $initialGear, int $rpm, int $adjustedGear)
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(1500);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
+        $shifter = new Doubles\MockedShifter($initialGear);
+        $driver  = $this->driver($shifter, $rpm);
 
         $driver->adjustGearRatio();
 
-        $this->assertSame($initialGear, $gearbox->getCurrentGear());
+        $this->assertSame($adjustedGear, $shifter->currentGear);
     }
 
-    public function testCurrentRPMIsTooAboveMaximum_AdjustGearRatio_CurrentGearIsIncreased()
+    public function gearRegulation(): array
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(2600);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
-
-        $driver->adjustGearRatio();
-
-        $this->assertSame($initialGear + 1, $gearbox->getCurrentGear());
+        return [
+            'RPM within limit' => [2, self::MIN_RPM + 1, 2],
+            'RPM too high'     => [3, self::MAX_RPM + 100, 4],
+            'RPM too low'      => [5, self::MIN_RPM - 100, 4],
+        ];
     }
 
-    public function testCurrentGearIsNotIncreasedBeyondMaxDrive()
+    private function driver(Doubles\MockedShifter $shifter, int $rpm = 1000): AutomaticTransmission
     {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(2100);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 6]);
+        $range  = RPMRange::fromValues(self::MIN_RPM, self::MAX_RPM);
+        $sensor = new Doubles\FakeEngineSensor($rpm);
 
-        $driver->adjustGearRatio();
-
-        $this->assertSame($initialGear, $gearbox->getCurrentGear());
-    }
-
-    public function testCurrentRPMIsTooBelowMinimum_AdjustGearRatio_CurrentGearIsDecreased()
-    {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(900);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 2]);
-
-        $driver->adjustGearRatio();
-
-        $this->assertSame($initialGear - 1, $gearbox->getCurrentGear());
-    }
-
-    public function testCurrentGearIsNotDecreasedBelowFirstGear()
-    {
-        $driver = new AutomaticTransmission($gearbox = new Gearbox(), $externalSystems = new ExternalSystems());
-        $externalSystems->setCurrentRpm(900);
-        $gearbox->setMaxDrive(6);
-        $gearbox->setGearBoxCurrentParams([1, $initialGear = 1]);
-
-        $driver->adjustGearRatio();
-
-        $this->assertSame($initialGear, $gearbox->getCurrentGear());
+        return new AutomaticTransmission(new GearRatio($shifter, $range), $sensor);
     }
 }
